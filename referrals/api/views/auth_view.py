@@ -9,13 +9,13 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from referrals.api.serializers import UserReadSerializer
 from referrals.models import AuthCode
-from referrals.services.user_service import UserService
+from referrals.services.auth_service import AuthService
 
 
 class AuthViewSet(ViewSet):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.service = UserService()
+        self.service = AuthService()
 
     @action(detail=False, methods=["post"], url_path="request-code")
     def request_code(self, request):
@@ -26,11 +26,7 @@ class AuthViewSet(ViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        code = f"{random.randint(1000, 9999)}"
-
-        AuthCode.objects.update_or_create(
-            phone_number=phone_number, defaults={"code": code}
-        )
+        self.service.request_auth_code(phone_number)
 
         time.sleep(random.uniform(1, 2))
 
@@ -47,20 +43,14 @@ class AuthViewSet(ViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        try:
-            auth_code = AuthCode.objects.get(phone_number=phone_number)
-            if auth_code.code != code:
-                return Response(
-                    {"error": "Invalid code."}, status=status.HTTP_400_BAD_REQUEST
-                )
-        except AuthCode.DoesNotExist:
+        result = self.service.verify_auth_code(phone_number, code)
+        if not result["success"]:
             return Response(
-                {"error": "Auth code not found."}, status=status.HTTP_400_BAD_REQUEST
+                {"error": result["message"]}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        auth_code.delete()
+        user = result["user"]
 
-        user = self.service.register_user(phone_number)
         refresh = RefreshToken.for_user(user)
         access = str(refresh.access_token)
 
