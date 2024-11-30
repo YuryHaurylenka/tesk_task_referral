@@ -12,6 +12,12 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(AuthCode)
 class AuthCodeAdmin(admin.ModelAdmin):
-    list_display = ("phone_number", "code", "created_at")
+    list_display = ("phone_number", "code", "created_at", "is_valid_display")
     search_fields = ("phone_number",)
     list_filter = ("created_at",)
+
+    def is_valid_display(self, obj):
+        return obj.is_valid()
+
+    is_valid_display.boolean = True
+    is_valid_display.short_description = "Is Valid"
