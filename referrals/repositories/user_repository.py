@@ -11,5 +11,12 @@ class UserRepository:
         return User.objects.create(phone_number=phone_number)
 
     @staticmethod
+    def get_or_create_user_by_phone(phone_number):
+        user = User.objects.filter(phone_number=phone_number).first()
+        if not user:
+            user = User.objects.create(phone_number=phone_number)
+        return user
+
+    @staticmethod
     def get_user_by_invite_code(invite_code):
         return User.objects.filter(invite_code=invite_code).first()
