@@ -1,3 +1,7 @@
+from datetime import timedelta
+
+from django.utils.timezone import now
+
 from referrals.models import AuthCode
 
 
@@ -8,6 +12,15 @@ class AuthRepository:
 
     @staticmethod
     def create_or_update_auth_code(phone_number, code):
-        return AuthCode.objects.update_or_create(
+        auth_code, _ = AuthCode.objects.update_or_create(
             phone_number=phone_number, defaults={"code": code}
         )
+        return auth_code
+
+    @staticmethod
+    def clean_expired_auth_codes():
+        expiration_time = now() - timedelta(minutes=5)
+        deleted_count, _ = AuthCode.objects.filter(
+            created_at__lt=expiration_time
+        ).delete()
+        return deleted_count
