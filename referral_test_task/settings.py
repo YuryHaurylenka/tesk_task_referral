@@ -73,7 +73,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = "referral_test_task.urls"
 
 # API Base URL for external API calls (can be moved to environment variables)
-API_BASE_URL = "http://127.0.0.1:8000/api"
+API_BASE_URL = "https://test-task-referral-system-92eb6c8cfef3.herokuapp.com/api"
 
 # URL to redirect to when login is required
 LOGIN_URL = "/request_code/"
