@@ -73,7 +73,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = "referral_test_task.urls"
 
 # API Base URL for external API calls (can be moved to environment variables)
-API_BASE_URL = "https://test-task-referral-system-92eb6c8cfef3.herokuapp.com/api"
+API_BASE_URL = os.getenv("API_BASE_URL")
 
 # URL to redirect to when login is required
 LOGIN_URL = "/request_code/"
@@ -82,7 +82,7 @@ LOGIN_URL = "/request_code/"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],  # Path to templates directory
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
