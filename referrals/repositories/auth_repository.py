@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from django.utils.timezone import now
 
-from referrals_api.models import AuthCode
+from referrals.models import AuthCode
 
 
 class AuthRepository:
@@ -13,7 +13,8 @@ class AuthRepository:
     @staticmethod
     def create_or_update_auth_code(phone_number, code):
         auth_code, _ = AuthCode.objects.update_or_create(
-            phone_number=phone_number, defaults={"code": code}
+            phone_number=phone_number,
+            defaults={"code": code},
         )
         return auth_code
 
