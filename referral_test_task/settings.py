@@ -27,6 +27,10 @@ SECRET_KEY = "django-insecure-u%e#mdghq3tszcb65r&$696q=4z-x7eik_0mpu@76&jvy4stw%
 DEBUG = True
 
 ALLOWED_HOSTS = []
+INTERNAL_IPS = [
+    "127.0.0.1",
+    "localhost",
+]
 
 # Application definition
 
@@ -39,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "referrals",
     "rest_framework",
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -50,9 +55,12 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "referrals.middleware.AddAuthorizationHeaderMiddleware",  # custom middleware
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "referral_test_task.urls"
+API_BASE_URL = "http://127.0.0.1:8000/api"
+LOGIN_URL = "/request_code/"
 
 TEMPLATES = [
     {
