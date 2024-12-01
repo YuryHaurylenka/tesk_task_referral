@@ -1,5 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
 
 
 def home_view(request):
-    return render(request, "base.html")
+    if request.session.get("access_token"):
+        return redirect("profile")
+    else:
+        return redirect("request_code")
