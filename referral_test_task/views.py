@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 
 
 def home_view(request):
@@ -6,3 +6,7 @@ def home_view(request):
         return redirect("profile")
     else:
         return redirect("request_code")
+
+
+def custom_404(request):
+    return render(request, "404.html", status=404)
