@@ -26,7 +26,10 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", False)
 
 # Define allowed hosts for security reasons
-ALLOWED_HOSTS = ["test-task-referral-system.herokuapp.com"]
+ALLOWED_HOSTS = [
+    "test-task-referral-system.herokuapp.com",
+    "test-task-referral-system-92eb6c8cfef3.herokuapp.com",
+]
 
 # Internal IPs for debugging purposes (localhost)
 INTERNAL_IPS = [
