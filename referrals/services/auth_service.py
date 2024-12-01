@@ -1,8 +1,8 @@
 import time
 from random import randint
 
-from referrals_api.repositories.auth_repository import AuthRepository
-from referrals_api.services.user_service import UserService
+from referrals.repositories.auth_repository import AuthRepository
+from referrals.services.user_service import UserService
 
 
 class AuthService:
@@ -20,16 +20,24 @@ class AuthService:
 
     def verify_auth_code(self, phone_number, code):
         auth_code = self.auth_repository.get_auth_code_by_phone(phone_number)
-        if not auth_code or auth_code.code != code:
-            return {"success": False, "error": "Invalid code."}
+
+        if not auth_code:
+            return {
+                "success": False,
+                "error": "Authorization code not found for this phone number.",
+            }
+
+        if auth_code.code != code:
+            return {"success": False, "error": "Invalid authorization code."}
+
         if not auth_code.is_valid():
-            return {"success": False, "error": "Code expired."}
+            auth_code.delete()
+            self.request_auth_code(phone_number)
+            return {
+                "success": False,
+                "error": "Authorization code has expired. A new code has been sent.",
+            }
 
         auth_code.delete()
-
         user = self.user_service.register_user(phone_number)
         return {"success": True, "user": user}
-
-    def clean_expired_auth_codes(self):
-        deleted_count = self.auth_repository.clean_expired_auth_codes()
-        return {"success": True, "deleted_count": deleted_count}
