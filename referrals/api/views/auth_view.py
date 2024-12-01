@@ -1,9 +1,9 @@
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.exceptions import ValidationError
 
 from referrals.api.serializers import (
     RequestCodeSerializer,
@@ -11,6 +11,7 @@ from referrals.api.serializers import (
     VerifyCodeSerializer,
 )
 from referrals.services.auth_service import AuthService
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 
 
 class AuthViewSet(ViewSet):
@@ -18,20 +19,42 @@ class AuthViewSet(ViewSet):
         super().__init__(**kwargs)
         self.service = AuthService()
 
+    @extend_schema(
+        summary="Request Authorization Code",
+        description="This endpoint allows the user to request an authorization code via phone number.",
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(
+                description="Auth code sent successfully."
+            ),
+            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
+                description="Invalid phone number."
+            ),
+            status.HTTP_500_INTERNAL_SERVER_ERROR: OpenApiResponse(
+                description="Failed to send auth code."
+            ),
+        },
+        parameters=[
+            OpenApiParameter(
+                name="phone_number",
+                description="The phone number to send the code to.",
+                required=True,
+                type=str,
+            )
+        ],
+    )
     @action(detail=False, methods=["post"], url_path="request_code")
     def request_code(self, request):
         serializer = RequestCodeSerializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
             phone_number = serializer.validated_data["phone_number"]
-
             self.service.request_auth_code(phone_number)
             return Response(
                 {"message": "Auth code sent successfully."}, status=status.HTTP_200_OK
             )
 
         except ValidationError as e:
-            error_message = list(e.detail.values())[0][0]  # First error message
+            error_message = list(e.detail.values())[0][0]
             return Response(
                 {"message": error_message}, status=status.HTTP_400_BAD_REQUEST
             )
@@ -41,6 +64,33 @@ class AuthViewSet(ViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
+    @extend_schema(
+        summary="Verify Authorization Code",
+        description="This endpoint verifies the authorization code provided by the user.",
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(
+                description="Code verified successfully."
+            ),
+            status.HTTP_400_BAD_REQUEST: OpenApiResponse(description="Invalid code."),
+            status.HTTP_500_INTERNAL_SERVER_ERROR: OpenApiResponse(
+                description="Verification failed."
+            ),
+        },
+        parameters=[
+            OpenApiParameter(
+                name="phone_number",
+                description="The phone number for verification.",
+                required=True,
+                type=str,
+            ),
+            OpenApiParameter(
+                name="code",
+                description="The authorization code entered by the user.",
+                required=True,
+                type=str,
+            ),
+        ],
+    )
     @action(detail=False, methods=["post"], url_path="verify_code")
     def verify_code(self, request):
         serializer = VerifyCodeSerializer(data=request.data)
