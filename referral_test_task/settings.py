@@ -26,10 +26,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", False)
 
 # Define allowed hosts for security reasons
-ALLOWED_HOSTS = [
-    "test-task-referral-system.herokuapp.com",
-    "test-task-referral-system-92eb6c8cfef3.herokuapp.com",
-]
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(" ")
 
 # Internal IPs for debugging purposes (localhost)
 INTERNAL_IPS = [
@@ -108,11 +105,7 @@ SECURE_API_ENDPOINTS = [
 WSGI_APPLICATION = "referral_test_task.wsgi.application"
 
 # Database configuration using PostgreSQL with environment variables
-DATABASES = {
-    "default": dj_database_url.config(
-        default=f"postgres://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('POSTGRES_HOST')}:{os.getenv('POSTGRES_PORT')}/{os.getenv('POSTGRES_DB')}"
-    )
-}
+DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
 # Django REST Framework configuration
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
