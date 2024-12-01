@@ -5,8 +5,8 @@ from rest_framework.exceptions import AuthenticationFailed
 class AddAuthorizationHeaderMiddleware:
 
     SECURE_ENDPOINTS = [
-        "/api/referrals/users/profile/",
-        "/api/referrals/users/activate-invite-code/",
+        "/api/users/profile/",
+        "/api/users/activate_invite_code/",
     ]
 
     def __init__(self, get_response):
