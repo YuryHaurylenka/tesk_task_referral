@@ -1,4 +1,4 @@
-from referrals.models import User
+from referrals_api.models import User
 
 
 class UserRepository:

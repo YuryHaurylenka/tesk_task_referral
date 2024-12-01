@@ -4,12 +4,12 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from referrals.api.serializers import (
+from referrals_api.api.serializers import (
     UserReadSerializer,
     RequestCodeSerializer,
     VerifyCodeSerializer,
 )
-from referrals.services.auth_service import AuthService
+from referrals_api.services.auth_service import AuthService
 
 
 class AuthViewSet(ViewSet):

@@ -1,4 +1,4 @@
-from referrals.repositories.user_repository import UserRepository
+from referrals_api.repositories.user_repository import UserRepository
 
 
 class UserService:

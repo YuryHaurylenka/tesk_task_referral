@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from django.utils.timezone import now
 
-from referrals.models import AuthCode
+from referrals_api.models import AuthCode
 
 
 class AuthRepository:

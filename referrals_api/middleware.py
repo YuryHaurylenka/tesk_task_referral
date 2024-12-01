@@ -18,7 +18,6 @@ class AddAuthorizationHeaderMiddleware:
             if not auth_header:
                 access_token = request.session.get("access_token")
                 if access_token:
-                    print(f"Adding token: Bearer {access_token}")
                     request.META["HTTP_AUTHORIZATION"] = f"Bearer {access_token}"
                 else:
                     raise AuthenticationFailed(

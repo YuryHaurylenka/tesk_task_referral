@@ -1,8 +1,8 @@
 import time
 from random import randint
 
-from referrals.repositories.auth_repository import AuthRepository
-from referrals.services.user_service import UserService
+from referrals_api.repositories.auth_repository import AuthRepository
+from referrals_api.services.user_service import UserService
 
 
 class AuthService:

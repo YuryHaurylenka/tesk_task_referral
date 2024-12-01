@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from rest_framework.permissions import IsAuthenticated
 
-from referrals.services.user_service import UserService
-from referrals.api.serializers import ActivateInviteCodeSerializer, UserReadSerializer
+from referrals_api.services.user_service import UserService
+from referrals_api.api.serializers import ActivateInviteCodeSerializer, UserReadSerializer
 
 
 class UserViewSet(ViewSet):

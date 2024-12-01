@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from referrals.models import AuthCode, User
+from referrals_api.models import AuthCode, User
 
 
 @admin.register(User)
