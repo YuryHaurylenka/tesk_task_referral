@@ -72,7 +72,7 @@ def request_code_view(request):
                 error = "An error occurred with the API."
 
         except requests.exceptions.RequestException as e:
-            error = "There was a problem with the request."
+            error = f"There was a problem with the request.{str(e)}"
 
         except Exception as e:
 
