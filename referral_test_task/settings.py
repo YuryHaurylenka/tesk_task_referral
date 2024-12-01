@@ -14,17 +14,19 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-u%e#mdghq3tszcb65r&$696q=4z-x7eik_0mpu@76&jvy4stw%"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", False)
 
 # Define allowed hosts for security reasons
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS")
 
 # Internal IPs for debugging purposes (localhost)
 INTERNAL_IPS = [
@@ -44,12 +46,15 @@ INSTALLED_APPS = [
     # Third-party apps
     "rest_framework",
     "debug_toolbar",
+    "drf_spectacular",
     # Custom apps
     "referrals",
 ]
 
 # Middleware configuration
 MIDDLEWARE = [
+    # Pythonanywhere static middleware
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     # Django's middleware for security, sessions, and request handling
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -101,22 +106,23 @@ WSGI_APPLICATION = "referral_test_task.wsgi.application"
 
 # Database configuration using PostgreSQL with environment variables
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB"),
-        "USER": os.getenv("POSTGRES_USER"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
-        "PORT": os.getenv("POSTGRES_PORT", 5432),
-    }
+    "default": dj_database_url.config(
+        default=f"postgres://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('POSTGRES_HOST')}:{os.getenv('POSTGRES_PORT')}/{os.getenv('POSTGRES_DB')}"
+    )
 }
-
 # Django REST Framework configuration
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+# ReDoc settings
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Referral System API",
+    "DESCRIPTION": "API for the Referral System application",
+    "VERSION": "1.0.0",
 }
 
 # Custom User Model (for referral app)
@@ -159,6 +165,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "static/"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
