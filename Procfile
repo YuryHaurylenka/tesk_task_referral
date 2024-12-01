@@ -1,1 +1,1 @@
-web: gunicorn test-task-referral-system.wsgi --log-file -
+web: gunicorn referral_test_task.wsgi --log-file -
