@@ -77,6 +77,10 @@ TEMPLATES = [
         },
     },
 ]
+SECURE_API_ENDPOINTS = [
+    "/api/users/profile/",
+    "/api/users/activate_invite_code/",
+]
 
 WSGI_APPLICATION = "referral_test_task.wsgi.application"
 

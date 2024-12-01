@@ -1,19 +1,15 @@
+from django.conf import settings
 from rest_framework.authentication import get_authorization_header
 from rest_framework.exceptions import AuthenticationFailed
 
 
 class AddAuthorizationHeaderMiddleware:
-
-    SECURE_ENDPOINTS = [
-        "/api/users/profile/",
-        "/api/users/activate_invite_code/",
-    ]
-
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        if any(request.path.startswith(endpoint) for endpoint in self.SECURE_ENDPOINTS):
+        secure_endpoints = settings.SECURE_API_ENDPOINTS
+        if any(request.path.startswith(endpoint) for endpoint in secure_endpoints):
             auth_header = get_authorization_header(request)
             if not auth_header:
                 access_token = request.session.get("access_token")
