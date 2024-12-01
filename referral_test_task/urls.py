@@ -18,4 +18,4 @@ if settings.DEBUG:
 
     urlpatterns += [path("__debug__/", include(debug_toolbar.urls))]
 
-handler404 = "referrals_test_task.views.custom_404"
+handler404 = "views.custom_404"
