@@ -51,18 +51,32 @@ def request_code_view(request):
 
     if request.method == "POST":
         phone_number = request.POST.get("phone_number")
+
+        if not phone_number:
+            error = "Phone number is required."
+            return render(request, "request_code.html", {"error": error})
+
         api_url = f"{settings.API_BASE_URL}/auth/request_code/"
+
         try:
             response = requests.post(api_url, data={"phone_number": phone_number})
             response.raise_for_status()
             request.session["phone_number"] = phone_number
             messages.success(request, "Authorization code sent successfully!")
             return redirect("verify_code")
-        except requests.exceptions.RequestException as e:
+
+        except requests.exceptions.HTTPError as e:
             try:
                 error = e.response.json().get("message", "An error occurred.")
             except (ValueError, AttributeError):
-                error = "An unknown error occurred."
+                error = "An error occurred with the API."
+
+        except requests.exceptions.RequestException as e:
+            error = "There was a problem with the request."
+
+        except Exception as e:
+
+            error = f"An unknown error occurred.{str(e)}"
 
     return render(request, "request_code.html", {"error": error})
 
