@@ -115,3 +115,7 @@ def logout_view(request):
     request.session.flush()
     messages.success(request, "You have been logged out successfully.")
     return redirect("request_code")
+
+
+def custom_404(request):
+    return render(request, "404.html", status=404)
