@@ -8,8 +8,14 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f7f8fa;
+            background-color: #f1f1f1;
             color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            margin-bottom: 30px;
         }
 
         .navbar-brand {
@@ -18,10 +24,14 @@
 
         .container {
             max-width: 960px;
+            padding: 15px;
         }
 
         .card {
             border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
         .card-body {
@@ -53,9 +63,16 @@
         .toast-container {
             z-index: 1055;
         }
+
+        .toast {
+            width: auto;
+            max-width: 350px;
+            margin: 5px;
+        }
     </style>
 </head>
 <body>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
         <a class="navbar-brand" href="{% if request.session.access_token %}{% url 'profile' %}{% else %}{% url 'request_code' %}{% endif %}">
@@ -108,9 +125,10 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.querySelectorAll('.toast').forEach(toast => {
-        const bootstrapToast = new bootstrap.Toast(toast, { delay: 5000 });
+        const bootstrapToast = new bootstrap.Toast(toast, {delay: 5000});
         bootstrapToast.show();
     });
 </script>
+
 </body>
 </html>
