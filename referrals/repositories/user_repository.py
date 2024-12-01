@@ -1,4 +1,4 @@
-from referrals_api.models import User
+from referrals.models import User
 
 
 class UserRepository:
@@ -12,9 +12,7 @@ class UserRepository:
 
     @staticmethod
     def get_or_create_user_by_phone(phone_number):
-        user = User.objects.filter(phone_number=phone_number).first()
-        if not user:
-            user = User.objects.create(phone_number=phone_number)
+        user, created = User.objects.get_or_create(phone_number=phone_number)
         return user
 
     @staticmethod
