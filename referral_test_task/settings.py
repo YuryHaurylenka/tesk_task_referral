@@ -17,36 +17,40 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-u%e#mdghq3tszcb65r&$696q=4z-x7eik_0mpu@76&jvy4stw%"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Define allowed hosts for security reasons
 ALLOWED_HOSTS = []
+
+# Internal IPs for debugging purposes (localhost)
 INTERNAL_IPS = [
     "127.0.0.1",
     "localhost",
 ]
 
 # Application definition
-
 INSTALLED_APPS = [
+    # Django core apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "referrals",
+    # Third-party apps
     "rest_framework",
     "debug_toolbar",
+    # Custom apps
+    "referrals",
 ]
 
+# Middleware configuration
 MIDDLEWARE = [
+    # Django's middleware for security, sessions, and request handling
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -54,18 +58,26 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "referrals.middleware.AddAuthorizationHeaderMiddleware",  # custom middleware
+    # Custom middleware for adding authorization header
+    "referrals.middleware.AddAuthorizationHeaderMiddleware",
+    # Debug Toolbar Middleware (only in development)
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
+# URLs Configuration
 ROOT_URLCONF = "referral_test_task.urls"
+
+# API Base URL for external API calls (can be moved to environment variables)
 API_BASE_URL = "http://127.0.0.1:8000/api"
+
+# URL to redirect to when login is required
 LOGIN_URL = "/request_code/"
 
+# Templates configuration
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR / "templates"],  # Path to templates directory
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -77,17 +89,17 @@ TEMPLATES = [
         },
     },
 ]
+
+# Secure API Endpoints to require authorization
 SECURE_API_ENDPOINTS = [
     "/api/users/profile/",
     "/api/users/activate_invite_code/",
 ]
 
+# WSGI Application configuration
 WSGI_APPLICATION = "referral_test_task.wsgi.application"
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-
+# Database configuration using PostgreSQL with environment variables
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -99,6 +111,7 @@ DATABASES = {
     }
 }
 
+# Django REST Framework configuration
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -106,8 +119,10 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
 }
 
+# Custom User Model (for referral app)
 AUTH_USER_MODEL = "referrals.User"
 
+# Simple JWT Configuration for access/refresh token management
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
@@ -120,9 +135,7 @@ SIMPLE_JWT = {
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
+# Password validation settings
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -138,23 +151,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
+# Localization settings (time zone, language code, etc.)
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = "static/"
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
