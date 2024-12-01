@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Authorization Code{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Verify Authorization Code</h2>
+
+                    {% if error %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="phone_number" class="form-label">Phone Number</label>
+                            <input type="text" id="phone_number" name="phone_number" class="form-control"
+                                   value="{{ phone_number }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="code" class="form-label">Authorization Code</label>
+                            <input type="text" id="code" name="code" class="form-control" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Verify Code</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
