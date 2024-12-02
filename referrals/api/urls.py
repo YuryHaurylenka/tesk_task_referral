@@ -26,5 +26,5 @@ if settings.DEBUG:
     ]
 
 urlpatterns += [
-    path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
+    path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
 ]
